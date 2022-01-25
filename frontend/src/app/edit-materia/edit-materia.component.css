@@ -1,0 +1,17 @@
+h2 {
+  margin: 20px;
+}
+.grid {
+  margin-left: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+
+.form {
+  width: 90%;
+}
+
+.add{
+  width: 50%;
+}

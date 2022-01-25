@@ -1,0 +1,435 @@
+<mat-tab-group>
+  <mat-tab label="Pendientes" *ngIf="!decano" >
+  <app-pendientes>
+  </app-pendientes>
+  </mat-tab>
+  <mat-tab label="Materias" *ngIf="!decano">
+    <div class="allTable">
+      <button class="boton" mat-raised-button color="warn" *ngIf="jefe||asistente" (click)="openAddMaterias()">Añadir Materia</button>
+      <button class="boton" mat-raised-button color="warn"  (click)="refresh()">Actualizar</button>
+      <button [disabled]="formPeriodo.invalid" class="boton" mat-raised-button color="warn"  (click)="buscarMateriasPeriodo()">Buscar por periodo</button>
+      <mat-form-field style="width: 80px;" class="boton" [formGroup]="formPeriodo">
+        <input required formControlName="anio"  matInput placeholder="Año">
+      </mat-form-field>
+      <mat-form-field style="width: 120px;" class="boton" [formGroup]="formPeriodo">
+        <mat-label>Semestre</mat-label>
+        <select matNativeControl required formControlName="semestre">
+          <option value="1">1er Semestre</option>
+          <option value="2">2do Semestre</option>
+        </select>
+      </mat-form-field>
+      <br/>
+      <mat-form-field style="width: 400px;">
+        <input  matInput (keyup)="applyFilterMaterias2($event.target.value)" placeholder="Buscar en Tabla">
+      </mat-form-field>
+      <table #sortMaterias mat-table [dataSource]="dataSourceMaterias2"  matSort  class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre" sticky>
+          <th class="Materia" mat-header-cell *matHeaderCellDef mat-sort-header >  Materia </th>
+          <td (click)="editMateria(element,true)" style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element" > {{element.nombre}} </td>
+        </ng-container>
+        <ng-container matColumnDef="id_docente" >
+          <th  mat-header-cell *matHeaderCellDef  mat-sort-header  > Docente </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell  *matCellDef="let element"> {{element.id_docente}} </td>
+        </ng-container>
+        <ng-container matColumnDef="inicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header  > Inicio </th>
+          <td style="text-align: left" mat-cell *matCellDef="let element"> {{displayDate(element.inicio)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Fin </th>
+          <td style="text-align: left" mat-cell *matCellDef="let element"> {{displayDate(element.fin)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="horas_planta">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Horas de Planta </th>
+          <td  mat-cell *matCellDef="let element"> {{element.horas_planta}} </td>
+        </ng-container>
+        <ng-container matColumnDef="horas_totales">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Horas Totales </th>
+          <td  mat-cell *matCellDef="let element"> {{element.horas_totales}} </td>
+        </ng-container>
+        <ng-container matColumnDef="silabo_subido">
+          <th mat-header-cell *matHeaderCellDef>
+            Silabo subido
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" (click)="setCheckbox(element._id,{'silabo_subido':!element.silabo_subido})" [checked]="element.silabo_subido">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="aula_revisada">
+          <th mat-header-cell *matHeaderCellDef>
+            Aula Revisada
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" (click)="setCheckbox(element._id,{'aula_revisada':!element.aula_revisada})" [checked]="element.aula_revisada">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="examen_revisado">
+          <th mat-header-cell *matHeaderCellDef>
+            Exámenes Revisados
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" (click)="setCheckbox(element._id,{'examen_revisado':!element.examen_revisado})" [checked]="element.examen_revisado">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contrato_impreso">
+          <th mat-header-cell *matHeaderCellDef>
+            Contrato impreso
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox  color="primary" (click)="setCheckbox(element._id,{'contrato_impreso':!element.contrato_impreso},element)"  [checked]="element.contrato_impreso">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contrato_firmado">
+          <th mat-header-cell *matHeaderCellDef>
+            Contrato firmado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox  color="primary" (click)="setCheckbox(element._id,{'contrato_firmado':!element.contrato_firmado})"  [checked]="element.contrato_firmado">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="planilla_lista">
+          <th mat-header-cell *matHeaderCellDef>
+            Planilla lista
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox  color="primary" (click)="setCheckbox(element._id,{'planilla_lista':!element.planilla_lista},element)" [checked]="element.planilla_lista">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="planilla_firmada">
+          <th mat-header-cell *matHeaderCellDef>
+            Planilla firmada
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox [disabled]="contabilidad" (click)="setCheckboxEsp(element._id,{'planilla_firmada':!element.planilla_firmada})" color="primary" [checked]="element.planilla_firmada">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="cheque_solicitado">
+          <th mat-header-cell *matHeaderCellDef>
+            Pago solicitado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox  color="primary" (click)="setCheckbox(element._id,{'cheque_solicitado':!element.cheque_solicitado})" [checked]="element.cheque_solicitado">
+            </mat-checkbox>
+          </td>
+        </ng-container> -->
+        <ng-container matColumnDef="cheque_recibido">
+          <th mat-header-cell *matHeaderCellDef>
+            Pago realizado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox  color="primary" (click)="setCheckbox(element._id,{'cheque_recibido':!element.cheque_recibido},element)" [checked]="element.cheque_recibido" >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="editMateria(element)" ><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteMateria(element)"><mat-icon>delete_outline</mat-icon></button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getDisplayedColumnsMaterias(); sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayedColumnsMaterias()">
+        </tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator #paginatorMaterias [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-tab>
+  <mat-tab label="Docentes" *ngIf="decano||jefe||asistente">
+    <div class="allTable">
+      <button class="boton" mat-raised-button color="warn" *ngIf="jefe||asistente" (click)="openAddDocentes()">Añadir Docente</button>
+      <button class="boton" mat-raised-button color="warn"  (click)="refresh()">Actualizar</button>
+      <br/>
+      <mat-form-field style="width: 400px;">
+        <input matInput  (keyup)="applyFilterDocentes($event.target.value)" placeholder="Buscar en Tabla">
+      </mat-form-field>
+      <table #sortDocentes mat-table [dataSource]="dataSourceDocentes"  matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Docente </th>
+          <td (click)="editDocente(element,true)" style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{element.nombre}} {{element.segundo_nombre}} {{element.apellido_paterno}}  {{element.apellido_materno}}</td>
+        </ng-container>
+        <ng-container matColumnDef="materias_asignadas">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Materia Asignadas </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{element.materias_asignadas}} </td>
+        </ng-container>
+        <ng-container matColumnDef="horas_planta">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Horas de Planta </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{element.horas_planta}} </td>
+        </ng-container>
+        <ng-container matColumnDef="horas_cubiertas">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Horas Cubiertas </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{element.horas_cubiertas}} </td>
+        </ng-container>
+        <ng-container matColumnDef="horas_faltantes">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Horas Faltantes </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{element.horas_planta - element.horas_cubiertas}} </td>
+        </ng-container>
+        <ng-container matColumnDef="evaluacion_pares">
+          <th mat-header-cell *matHeaderCellDef>
+            Evaluación por pares
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [disabled]="asistente" (click)="setEvalPares(element._id,{'evaluacion_pares':!element.evaluacion_pares})" [checked]=element.evaluacion_pares>
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="editDocente(element)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteDocente(element)"><mat-icon>delete_outline</mat-icon></button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getDisplayedColumnsDocentes(); sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayedColumnsDocentes();">
+        </tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator #paginatorDocentes [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-tab>
+  <mat-tab label="Seguimiento General" *ngIf="decano||jefe">
+    <div class="Table">
+      <button  class="boton" mat-raised-button color="warn"  (click)="refresh()">Actualizar</button>
+      <button [disabled]="formPeriodo.invalid" class="boton" mat-raised-button color="warn"  (click)="buscarMateriasPeriodo()">Buscar por periodo</button>
+      <mat-form-field style="width: 80px;" class="boton" [formGroup]="formPeriodo">
+        <input required formControlName="anio"  matInput placeholder="Año">
+      </mat-form-field>
+      <mat-form-field style="width: 120px;" class="boton" [formGroup]="formPeriodo">
+        <mat-label>Semestre</mat-label>
+        <select matNativeControl required formControlName="semestre">
+          <option value="1">1er Semestre</option>
+          <option value="2">2do Semestre</option>
+        </select>
+      </mat-form-field>
+      <br/>
+      <mat-form-field style="width: 400px;">
+        <input  matInput (keyup)="applyFilterMaterias($event.target.value)" placeholder="Buscar en Tabla">
+      </mat-form-field>
+      <table #sortGeneral mat-table [dataSource]="dataSourceMaterias"  matSort  class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre" sticky>
+          <th class="Materia" mat-header-cell *matHeaderCellDef mat-sort-header >  Materia </th>
+          <td (click)="editMateria(element,true)" style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element" > {{element.nombre}} </td>
+        </ng-container>
+        <ng-container matColumnDef="id_docente" >
+          <th  mat-header-cell *matHeaderCellDef mat-sort-header > Docente </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{element.id_docente}} </td>
+        </ng-container>
+        <ng-container matColumnDef="inicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Inicio </th>
+          <td style="text-align: left" mat-cell *matCellDef="let element"> {{displayDate(element.inicio)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Fin </th>
+          <td style="text-align: left" mat-cell *matCellDef="let element"> {{displayDate(element.fin)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="silabo_subido">
+          <th mat-header-cell *matHeaderCellDef>
+            Silabo subido
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [disabled]="decano" (click)="setCheckbox(element._id,{'silabo_subido':!element.silabo_subido})" [checked]="element.silabo_subido">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="aula_revisada">
+          <th mat-header-cell *matHeaderCellDef>
+            Aula Revisada
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [disabled]="decano" (click)="setCheckbox(element._id,{'aula_revisada':!element.aula_revisada})" [checked]="element.aula_revisada">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="examen_revisado">
+          <th mat-header-cell *matHeaderCellDef>
+            Exámenes Revisados
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [disabled]="decano" (click)="setCheckbox(element._id,{'examen_revisado':!element.examen_revisado})" [checked]="element.examen_revisado">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contrato_impreso">
+          <th mat-header-cell *matHeaderCellDef>
+            Contrato impreso
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.contrato_impreso">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contrato_firmado">
+          <th mat-header-cell *matHeaderCellDef>
+            Contrato firmado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.contrato_firmado">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="planilla_lista">
+          <th mat-header-cell *matHeaderCellDef>
+            Planilla lista
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.planilla_lista">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="planilla_firmada">
+          <th mat-header-cell *matHeaderCellDef>
+            Planilla firmada
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.planilla_firmada">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="cheque_solicitado">
+          <th mat-header-cell *matHeaderCellDef>
+            Pago solicitado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.cheque_solicitado">
+            </mat-checkbox>
+          </td>
+        </ng-container> -->
+        <ng-container matColumnDef="cheque_recibido">
+          <th mat-header-cell *matHeaderCellDef>
+            Pago realizado
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox disabled color="primary" [checked]="element.cheque_recibido" >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="editMateria(element)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteMateria(element)"><mat-icon>delete_outline</mat-icon></button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getDisplayedColumns(); sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayedColumns()">
+        </tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator #paginatorGeneral  [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-tab>
+  <mat-tab label="Configuracion">
+    <div class="allTable" *ngIf="!decano">
+      <button *ngIf="admin"  class="boton" style="margin-bottom: 5px" mat-raised-button color="warn"  (click)="resetAnio()">Reset evaluacion por pares</button>
+      <button *ngIf="admin" class="boton" style="margin-bottom: 5px" mat-raised-button color="warn"  (click)="resetSemestre()">Reset materias asignadas y horas cubiertas</button>
+      <table mat-table [dataSource]="dataSourceConfiguarionPendientes" class="mat-elevation-z8">
+        <ng-container matColumnDef="opcion">
+          <th mat-header-cell *matHeaderCellDef> Extras </th>
+          <td mat-cell *matCellDef="let element"> {{element.label}} </td>
+        </ng-container>
+        <ng-container matColumnDef="configuracion">
+          <th mat-header-cell *matHeaderCellDef>
+            Configuracion
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [checked]="element.hide" (click)="changePreferenceOld(element.def,element.hide)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsConfiguracion"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsConfiguracion;">
+        </tr>
+      </table>
+    </div>
+    <div class="allTable" *ngIf="decano || jefe">
+      <table mat-table [dataSource]="dataSourceConfiguracion" class="mat-elevation-z8">
+        <ng-container matColumnDef="opcion">
+          <th mat-header-cell *matHeaderCellDef> Seguimiento General </th>
+          <td mat-cell *matCellDef="let element"> {{element.label}} </td>
+        </ng-container>
+        <ng-container matColumnDef="configuracion">
+          <th mat-header-cell *matHeaderCellDef>
+            Configuracion
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [checked]="element.hide" (click)="changePreferenceSeg(element.def,element.hide)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsConfiguracion"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsConfiguracion;">
+        </tr>
+      </table>
+    </div>
+    <div class="allTable" *ngIf="!decano">
+      <table mat-table [dataSource]="dataSourceConfiguracionMaterias" class="mat-elevation-z8">
+        <ng-container matColumnDef="opcion">
+          <th mat-header-cell *matHeaderCellDef> Materias y Pendientes </th>
+          <td mat-cell *matCellDef="let element"> {{element.label}} </td>
+        </ng-container>
+        <ng-container matColumnDef="configuracion">
+          <th mat-header-cell *matHeaderCellDef>
+            Configuracion
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox color="primary" [checked]="element.hide" (click)="changePreferenceMat(element.def,element.hide)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsConfiguracion"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsConfiguracion;">
+        </tr>
+      </table>
+    </div>
+  </mat-tab>
+  <mat-tab label="Cuentas" *ngIf="admin">
+    <div class="allTable">
+      <button  class="boton" mat-raised-button color="warn" *ngIf="true" (click)="openAddCuentas()">Añadir Cuenta</button>
+      <button  class="boton" mat-raised-button color="warn"  (click)="refresh()">Actualizar</button>
+      <br/>
+      <mat-form-field>
+        <input matInput (keyup)="applyFilterUsuarios($event.target.value)" placeholder="Buscar en Tabla">
+      </mat-form-field>
+      <table #sortUsuarios mat-table [dataSource]="dataSourceUsuarios"  matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+          <td (click)="editUsuario(element,true)" style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{element.nombre}} {{element.segundo_nombre}} {{element.apellido_paterno}}  {{element.apellido_materno}}</td>
+        </ng-container>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell  *matHeaderCellDef > Email </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+        <ng-container matColumnDef="rol">
+          <th mat-header-cell  *matHeaderCellDef > Rol </th>
+          <td style="text-align: center; padding-right: 7%" mat-cell *matCellDef="let element"> {{displayRol(element.rol)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="opciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="editUsuario(element)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteUsuario(element)"><mat-icon>delete_outline</mat-icon></button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsUsuarios; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsUsuarios;">
+        </tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator #paginatorUsuarios [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+

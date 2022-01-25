@@ -1,0 +1,71 @@
+<div class="add_docente">
+  <h2 *ngIf="!data.visual">Editar Materia</h2>
+  <h2 *ngIf="data.visual">Visualizar Materia</h2>
+  <div>
+    <form  class = "form grid" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input [readonly]="data.visual" required type="text" matInput formControlName="nombre" placeholder="Materia" name="nombre">
+          <mat-error>Nombre de Materia Requerida</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form">
+          <input [readonly]="data.visual"  [matAutocomplete]="auto" [formControl]="myControlDocentes" type="text" matInput placeholder="Docente" name="id_docente" [ngModel]="data.docente[0]" [(ngModel)]="data.docente[0]">
+          <mat-error>Docente Requerido</mat-error>
+          <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayDocente2" >
+            <mat-option *ngFor="let option of filterOptionsDocentes | async" [value]="option">
+              {{displayDocente(option)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input [readonly]="data.visual" formControlName="inicio" required type="text" matInput placeholder="Fecha de Inicio" name="inicio"  [matDatepicker]="datepickerRef" readonly/>
+          <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #datepickerRef></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input [readonly]="data.visual" formControlName="fin" required type="text" matInput placeholder="Fecha de Fin" name="fin" [matDatepicker]="datepickerRef2" readonly/>
+          <mat-datepicker-toggle [for]="datepickerRef2" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #datepickerRef2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input [readonly]="data.visual" formControlName="horas_totales"  required type="text" matInput  placeholder="Horas Totales Materia" name="horas_totales" >
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input [readonly]="data.visual" formControlName="horas_planta"  type="text" matInput  placeholder="Horas Planta Materia" name="horas_totales"  >
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input [readonly]="data.visual" id="encargado" [matAutocomplete]="auto2" [formControl]="myControlUsuarios" type="text" matInput placeholder="Jefe de Carrera Encargado" name="id_jefe_carrera" [(ngModel)]="data.materia.id_jefe_carrera">
+          <mat-autocomplete  #auto2="matAutocomplete" [displayWith]="displayUsuario" >
+            <mat-option *ngFor="let option of filterOptionsUsuarios | async" [value]="option.nombre_corto">
+              {{displayUsuario2(option)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input [readonly]="data.visual" type="text" matInput  placeholder="Aula" name="aula" formControlName="aula">
+        </mat-form-field>
+      </div>
+      <div>
+        <p *ngIf="this.data.docente[0]">Horas Planta Faltantes de Docente: {{this.data.docente[0].horas_planta - this.data.docente[0].horas_cubiertas}}</p>
+      </div>
+      <div></div>
+      <div>
+        <button *ngIf="!data.visual" [disabled]="form.invalid"   type="submit" class="add" mat-raised-button color="warn">Modificar</button>
+      </div>
+    </form>
+  </div>
+</div>

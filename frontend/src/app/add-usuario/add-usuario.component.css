@@ -1,0 +1,29 @@
+h2 {
+  margin: 20px;
+}
+.grid {
+  margin-left: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.noGrid {
+  margin-left: 40px;
+}
+
+.form {
+  width: 80%;
+}
+
+.add{
+  width: 50%;
+}
+.noGridAdd{
+  width: 25%;
+}
+.option{
+  width: 500px;
+}
+
+mat-autocomplete{
+  width: auto;
+}

@@ -1,0 +1,61 @@
+.allTable{
+  align-self: center;
+  margin: 10px;
+  height: auto;
+}
+.Table {
+  align-self: center;
+  margin: 10px;
+  height: auto;
+  min-width: 2000px;
+}
+.Table > div > mat-paginator{
+  align-self: center;
+  margin: 10px;
+  height: auto;
+  min-width: 2000px;
+}
+.allTable > div > mat-paginator{
+  align-self: center;
+  margin: 10px;
+  height: auto;
+}
+
+.Table > form{
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom: 10px;
+  min-width: 2000px;
+}
+.allTable > form{
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom: 10px;
+  min-width: 2000px;
+}
+.Table > form > mat-checkbox{
+  margin: 15px;
+}
+.allTable > form > mat-checkbox{
+  margin: 15px;
+}
+
+.mat-table {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+.mat-header-cell {
+  text-align: center;
+  font-size: medium;
+}
+.Materia{
+  justify-content: center;
+}
+
+.boton{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+

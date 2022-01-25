@@ -1,0 +1,56 @@
+<div class="add_docente">
+  <h2 mat-dialog-title>Añadir Cuenta</h2>
+  <form mat-dialog-content class="grid" (ngSubmit)="onSubmit()" >
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="nombre" type="text" id="nombre" matInput placeholder="Nombre" name="nombre">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="segundo_nombre" type="text" id="segundo_nombre" matInput placeholder="Segundo Nombre" name="segundo_nombre">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="apellido_paterno" type="text" id="apellido_paterno" matInput placeholder="Apellido Paterno" name="apellido_paterno">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="apellido_materno" type="text" id="apellido_materno" matInput placeholder="Apellido Materno" name="apellido_materno">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="email" type="text" id="email" matInput placeholder="Email" name="email">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <mat-label>Rol</mat-label>
+        <select matNativeControl required formControlName="rol">
+          <option value="decano">Decano</option>
+          <option value="jefe_carrera">Jefe de Carrera</option>
+          <option value="asistente">Asistente Administrativa</option>
+          <option value="registros">Encargada de Registros</option>
+          <option value="contabilidad">Encargada de Contabilidad</option>
+        </select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="form" [formGroup]="form">
+        <input formControlName="nombre_corto" type="text" id="nombre_corto" matInput placeholder="Nombre Corto" name="nombre_corto">
+      </mat-form-field>
+    </div>
+    <div>
+      <form [formGroup]="form">
+        <mat-checkbox id="super_usuario" class="super_usuario" color="primary"
+                      formControlName="super_usuario">Super Usuario</mat-checkbox>
+      </form>
+    </div>
+    <div>
+      <button [disabled]="form.invalid" class="add" mat-raised-button color="warn">Añadir</button>
+    </div>
+  </form>
+</div>

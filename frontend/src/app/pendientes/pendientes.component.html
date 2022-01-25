@@ -1,0 +1,34 @@
+<button mat-raised-button color="warn" class="boton" (click)="refresh()">Actualizar</button>
+    <div class="allTable">
+      <mat-form-field style="width: 400px;">
+        <input matInput (keyup)="applyFilterPendientes($event.target.value)" placeholder="Buscar en Tabla">
+      </mat-form-field>
+      <table #sortPendientes mat-table [dataSource]="dataSourcePendientes"  matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="materia">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Materia </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{element.materia}} </td>
+        </ng-container>
+        <ng-container matColumnDef="id_docente">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Docente </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{element.id_docente}} </td>
+        </ng-container>
+        <ng-container matColumnDef="inicio">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Inicio </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{displayDate(element.inicio)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fin">
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Fin </th>
+          <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{displayDate(element.fin)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="message">
+          <th mat-header-cell  *matHeaderCellDef> Mensaje </th>
+          <td style="text-align: left" *matCellDef="let element">{{displayMensaje(element.message)}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsPendientes; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsPendientes;">
+        </tr>
+      </table>
+    </div>
+    <div>
+      <mat-paginator #paginatorPendientes [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>

@@ -1,0 +1,85 @@
+<div class="add_docente">
+  <h2>Añadir Materia</h2>
+  <div>
+    <form class = "grid" (ngSubmit)="onSubmit()">
+      <div>
+      <mat-form-field  class="form" [formGroup]="form">
+        <input required type="text" id="nombre"  matInput  placeholder="Materia" name="nombre" formControlName="nombre">
+        <mat-error>Nombre de materia requerida</mat-error>
+      </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input id="docente" [matAutocomplete]="auto" [formControl]="myControlDocentes" type="text" matInput placeholder="Docente" name="id_docente" [(ngModel)]="super.docente">
+          <mat-autocomplete  #auto="matAutocomplete" [displayWith]="displayDocente2" >
+            <mat-option *ngFor="let option of filterOptionsDocentes | async" [value]="option">
+              {{displayDocente(option)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input type="text" id="inicio" matInput placeholder="Fecha de Inicio" [matDatepicker]="datepickerRef" name="inicio" formControlName="inicio" required readonly/>
+          <mat-error>Fecha de Inicio Requerida</mat-error>
+          <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #datepickerRef></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input type="text" id="fin" matInput placeholder="Fecha de Fin" [matDatepicker]="datepickerRef2" name="fin" formControlName="fin" required readonly/>
+          <mat-error>Fecha de Fin Requerida</mat-error>
+          <mat-datepicker-toggle [for]="datepickerRef2" matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #datepickerRef2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input required type="text" matInput  placeholder="Horas Totales" name="horas_totales" formControlName="horas_totales">
+          <mat-error>Horas totales requerias/Solo números</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input type="text" matInput  placeholder="Horas Planta" name="horas_planta" formControlName="horas_planta">
+          <mat-error>Solo números</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="form" [formGroup]="form">
+          <input id="encargado" [matAutocomplete]="auto2" [formControl]="myControlUsuarios" type="text" matInput placeholder="Jefe de Carrera Encargado" name="usuario" [(ngModel)]="super.usuario">
+          <mat-autocomplete  #auto2="matAutocomplete" [displayWith]="displayUsuario2" >
+            <mat-option *ngFor="let option of filterOptionsUsuarios | async" [value]="option">
+              {{displayUsuario(option)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field  class="form" [formGroup]="form">
+          <input type="text" matInput  placeholder="Aula" name="aula" formControlName="aula">
+        </mat-form-field>
+      </div>
+      <div>
+        <button [disabled]="form.invalid" class="add" mat-raised-button color="warn">Añadir</button>
+      </div>
+    </form>
+  </div>
+  <hr>
+  <h2>Añadir materias con archivo excel</h2>
+  <div class="grid">
+    <div>
+      <form method="post" enctype="multipart/form-data">
+        <div>
+          <label for="file">Elegir el archivo excel</label>
+          <input type="file" id="file" (change)="onFileChange($event)">
+        </div>
+        <div>
+          <button mat-raised-button color="primary" (click)="submitFile()">Subir archivo</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
