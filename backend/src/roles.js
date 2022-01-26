@@ -39,18 +39,20 @@ let roles = {
     }
   ],
   contabilidad: [
+    // {
+    //   nombre: "cheque_solicitado",
+    //   type: "end",
+    //   days: 0,
+    //   horas_contrato: true,
+    //   message: "El cheque no ha sido solicitado"
+    // },
     {
-      nombre: "cheque_solicitado",
+      nombre: "cheque_recibido",
       type: "end",
       days: 0,
       horas_contrato: true,
-      message: "El cheque no ha sido solicitado"
-    },
-    {
-      nombre: "cheque_recibido",
-      type: "dependency",
-      dependency: "cheque_solicitado",
-      message: "El cheque no ha sido recibido"
+      //dependency: "cheque_solicitado",
+      message: "El pago no ha sido realizado"
     }
   ],
   registros: [

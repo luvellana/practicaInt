@@ -21,8 +21,8 @@
           <td style="text-align: left; width: 120px; padding-right: 20px" mat-cell *matCellDef="let element"> {{displayDate(element.fin)}} </td>
         </ng-container>
         <ng-container matColumnDef="message">
-          <th mat-header-cell  *matHeaderCellDef> Mensaje </th>
-          <td style="text-align: left" *matCellDef="let element">{{displayMensaje(element.message)}} </td>
+          <th mat-header-cell  *matHeaderCellDef mat-sort-header> Mensaje </th>
+          <td style="text-align: left; padding-right: 20px" mat-cell *matCellDef="let element">{{displayMensaje(element.message)}} </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumnsPendientes; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsPendientes;">

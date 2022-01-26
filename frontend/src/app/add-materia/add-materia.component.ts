@@ -234,7 +234,15 @@ export class AddMateriaComponent implements OnInit {
           console.log(res);
           this.dialogRef.close();
           if(res.status==200) {
-            this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:"Materia(s) añadida(s) exitosamente"}});
+            let msj = '';
+            if(Object.values(res.body)[0] < 0){
+              msj= '\nSe han añadido los siguientes docentes: \n'
+              Object.values(res.body)[0].forEach(e => {
+                msj += ("   -" + e + "\n")                  
+              });          
+            }
+            this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:`Materia(s) añadida(s) exitosamente. ${msj})
+          }`}});
           }
         },error => {
           console.log(error)

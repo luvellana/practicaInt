@@ -31,7 +31,7 @@ const controller = {
     },
 
     createMateriasExcel: async function (req, res) {
-        let cols = ['Materia', 'Docente', 'Aula', 'Fecha Inicio', 'Fecha Fin', 'Créditos', 'Creador', 'Código Materia'];
+        let cols = ['Materia', 'Docente', 'Aula', 'Fecha Inicio', 'Fecha Fin', 'Créditos', 'Creador', 'Código Materia', 'Email Docente'];
         let excelCols = req.body.excel[3];
         if(!cols.every(val => excelCols.indexOf(val) >= 0)){
             return res.status(500).send({message: 'El archivo excel no tiene el formato correcto'})
@@ -44,6 +44,7 @@ const controller = {
         let creditosIndex = excelCols.indexOf('Créditos');
         let creadorIndex = excelCols.indexOf('Creador');
         let codigoIndex = excelCols.indexOf('Código Materia');
+        let emailIndex = excelCols.indexOf('Email Docente');
 
         let materias = req.body.excel.slice(5).map(materia => {
             if(materia.length < 1){
@@ -61,6 +62,7 @@ const controller = {
                 horas_totales: materia[creditosIndex]*16,
                 id_jefe_carrera: materia[creadorIndex],
                 codigo: materia[codigoIndex],
+                email_doc: materia[emailIndex],
                 excel: true
             }
         });
@@ -89,8 +91,39 @@ const controller = {
                             console.log(num);
                         });
                     }else{
-                        materia['id_docente'] = '';
-                        errors.push(`Error en linea ${i+6}, ${materia.nombre}. Docente:  ${nombreDocente}, no registrado en base de datos`);
+
+                        let nomDoc = materia.nombre_docente.split(' ');
+
+                        let nom = "";
+                        nomDoc.slice(2).forEach( a => {
+                            nom = nom + " " + a;
+                        }
+                        )
+
+                        let doc1 = new Docente(Object.assign(
+                            {
+                                nombre: nom,
+                                apellido_paterno: nomDoc[0],
+                                apellido_materno: nomDoc[1],
+                                email: materia.email_doc,
+                                materias_asignadas: 1,
+                                horas_planta: 0,
+                                horas_cubiertas: 0,
+                                evaluacion_pares: false,
+                                id_jefe_carrera: materia.id_jefe_carrera
+                            }
+                        ));
+                        doc1.save(default_response(req, res));
+                        Docente.findOne({
+                            nombre: nom,
+                            apellido_paterno: nomDoc[0],
+                            apellido_materno: nomDoc[1]
+                        }).exec(response(req, res, (req, res, d) =>{
+                            nombres[materia.id_docente]=d.id
+                            materia['id_docente']=d.id
+                        }))  
+                    
+                        errors.push(`${materia.nombre_docente}`);
                     }
                     materiasExcel[materia.codigo] = materia;
                 }
@@ -128,7 +161,7 @@ const controller = {
                     ]
                 }, response(req, res, (req, res, eliminadas) => {
                     MateriaController.create(materiasToInsert, response(req, res, (req, res, materiasCreadas) => {
-                        return res.status(200).send({materias_no_insertadas: errors})
+                        return res.status(200).send({Docentes_aniadidos: errors})
                     }))
                 }));
 

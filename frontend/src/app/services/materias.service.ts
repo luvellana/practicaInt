@@ -11,8 +11,8 @@ import {Usuario} from "../models/usuario";
 })
 export class MateriasService {
 
-  readonly URL_API = "https://186.121.251.3:7910";
-  //readonly URL_API = "http://localhost:3700";
+  //readonly URL_API = "https://186.121.251.3:7910";
+  readonly URL_API = "http://localhost:3700";
 
   constructor(private http: HttpClient, private tokenService: TokenService) {
   }
