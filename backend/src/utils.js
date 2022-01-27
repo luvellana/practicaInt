@@ -27,9 +27,12 @@ function response(req, res, func) {
                 })
             }
         }
-        if(!result) return res.status(404).send({
+        if(!result) {
+            console.log("Entré aquí porque mi result es vacío")
+            return res.status(404).send({
             message: 'No se ha encontrado los datos en la base de datos'
         });
+        } 
 
         return func(req, res, result);
     }

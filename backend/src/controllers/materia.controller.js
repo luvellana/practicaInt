@@ -21,6 +21,11 @@ function actualizarHoras(req, res, docenteId, materia, sumar, callback){
     }));
 }
 
+async function aniadirDocente(doc){
+    await Docente.create(doc)
+    console.log("Cree docente ", doc);
+}
+
 const controller = {
 
     createMateria: function (req, res) {
@@ -68,6 +73,7 @@ const controller = {
         });
 
         Docente.find({}).exec(response(req, res, (req, res, docentes) => {
+            console.log("Busque a docentes y tengo respuesta")
             let nombres = {};
             docentes.forEach(docente => {
                 let nombre = docente.apellido_paterno + docente.apellido_materno  + docente.nombre;
@@ -77,7 +83,7 @@ const controller = {
             let materiasExcel = {};
             let errors = [];
             let i = 0;
-            materias.forEach(materia => {
+            materias.forEach(async materia => {
                 if(materia.nombre != 'No valido'){
                     i++;
                     let nombreDocente = materia.id_docente;
@@ -88,41 +94,37 @@ const controller = {
                         ,{
                             $inc: {materias_asignadas: 1}
                         }, function(err, num) {
-                            console.log(num);
+                            console.log("Busque a docente ", num, " y recibi respuesta");
                         });
                     }else{
 
                         let nomDoc = materia.nombre_docente.split(' ');
-
                         let nom = "";
                         nomDoc.slice(2).forEach( a => {
                             nom = nom + " " + a;
-                        }
-                        )
-
-                        let doc1 = new Docente(Object.assign(
-                            {
-                                nombre: nom,
-                                apellido_paterno: nomDoc[0],
-                                apellido_materno: nomDoc[1],
-                                email: materia.email_doc,
-                                materias_asignadas: 1,
-                                horas_planta: 0,
-                                horas_cubiertas: 0,
-                                evaluacion_pares: false,
-                                id_jefe_carrera: materia.id_jefe_carrera
-                            }
-                        ));
-                        doc1.save(default_response(req, res));
-                        Docente.findOne({
+                        })
+                        
+                        await aniadirDocente({
                             nombre: nom,
                             apellido_paterno: nomDoc[0],
-                            apellido_materno: nomDoc[1]
-                        }).exec(response(req, res, (req, res, d) =>{
-                            nombres[materia.id_docente]=d.id
-                            materia['id_docente']=d.id
-                        }))  
-                    
+                            apellido_materno: nomDoc[1],
+                            email: materia.email_doc,
+                            materias_asignadas: 1,
+                            horas_planta: 0,
+                            horas_cubiertas: 0,
+                            evaluacion_pares: false,
+                            id_jefe_carrera: materia.id_jefe_carrera
+                        })
+                        
+                        Docente.findOne({
+                                nombre: nom,
+                                apellido_paterno: nomDoc[0],
+                                apellido_materno: nomDoc[1]
+                            }).exec((res, docente) => {
+                                nombres[materia.id_docente]=docente.id
+                                materia['id_docente']=docente.id
+                                console.log("Busque a docente ", docente, " y lo encontre");
+                            })
                         errors.push(`${materia.nombre_docente}`);
                     }
                     materiasExcel[materia.codigo] = materia;
@@ -130,6 +132,7 @@ const controller = {
             });
 
             MateriaController.find({codigo: { $in: Object.keys(materiasExcel) }},{_id:0}).exec(response(req, res, (req, res, materias) => {
+                console.log("Busque materias y tengo respuesta")
                 let materiasBD = {};
                 materias.forEach(materia => {
                     if(materia.nombre != 'No valido'){
@@ -160,7 +163,9 @@ const controller = {
                         { excel: true}
                     ]
                 }, response(req, res, (req, res, eliminadas) => {
+                    console.log("Busque materias para eliminar y tengo respuesta")
                     MateriaController.create(materiasToInsert, response(req, res, (req, res, materiasCreadas) => {
+                        console.log("Busque a materias paa crear y tengo respuesta")
                         return res.status(200).send({Docentes_aniadidos: errors})
                     }))
                 }));
