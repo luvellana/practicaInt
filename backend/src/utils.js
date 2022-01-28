@@ -33,7 +33,7 @@ function response(req, res, func) {
             message: 'No se ha encontrado los datos en la base de datos'
         });
         } 
-
+        console.log("La logró")
         return func(req, res, result);
     }
 }

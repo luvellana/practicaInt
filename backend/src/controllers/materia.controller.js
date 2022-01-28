@@ -22,8 +22,49 @@ function actualizarHoras(req, res, docenteId, materia, sumar, callback){
 }
 
 async function aniadirDocente(doc){
-    await Docente.create(doc)
-    console.log("Cree docente ", doc);
+    
+}
+
+function aniadirMaterias(materiasExcel, errors, req, res){
+    console.log("Llamando a buscar todas las materias")
+    MateriaController.find({codigo: { $in: Object.keys(materiasExcel) }},{_id:0}).exec(response(req, res, (req, res, materias) => {
+        console.log("Busque materias y tengo respuesta")
+        let materiasBD = {};
+        materias.forEach(materia => {
+            if(materia.nombre != 'No valido'){
+                materiasBD[materia.codigo] = materia
+            }
+        }
+        )
+        let materiasToInsert = []
+        Object.values(materiasExcel).forEach(materia => {
+            //let dataToAssing = (materia.codigo in materiasBD)? JSON.stringify(materiasBD[materia.codigo]) : {};
+            let datos = ['silabo_subido', 'aula_revisada', 'examen_revisado', 'contrato_impreso', 'contrato_firmado',
+                'planilla_lista', 'planilla_firmada', 'cheque_solicitado', 'cheque_recibido', 'cheque_entregado', 'horas_planta'];
+            if (materia.codigo in materiasBD) {
+                datos.forEach(dato => {
+                    materia[dato] = materiasBD[materia.codigo][dato]
+                });
+            }
+            materiasToInsert.push(materia);
+        })
+        let semestre = utils.getSemestre();
+        console.log("Llamando a borrar materias")
+        MateriaController.deleteMany({
+            $and: [
+                { inicio: { $gte: semestre.start} },
+                { fin: {$lte: semestre.end}},
+                { excel: true}
+            ]
+        }, response(req, res, (req, res, eliminadas) => {
+            console.log("Llamando a añadir materias")
+            MateriaController.create(materiasToInsert, response(req, res, (req, res, materiasCreadas) => {
+                return res.status(200).send({Docentes_aniadidos: errors})
+            }))
+        }));
+
+
+            }));
 }
 
 const controller = {
@@ -72,8 +113,8 @@ const controller = {
             }
         });
 
+        console.log("Llamando a buscar todos los docentes");
         Docente.find({}).exec(response(req, res, (req, res, docentes) => {
-            console.log("Busque a docentes y tengo respuesta")
             let nombres = {};
             docentes.forEach(docente => {
                 let nombre = docente.apellido_paterno + docente.apellido_materno  + docente.nombre;
@@ -82,29 +123,31 @@ const controller = {
             });
             let materiasExcel = {};
             let errors = [];
+            let docentesToAdd = [];
+            let IdsDocentesMaterias = [];
             let i = 0;
-            materias.forEach(async materia => {
+            materias.forEach(async (materia, index) => {
                 if(materia.nombre != 'No valido'){
                     i++;
                     let nombreDocente = materia.id_docente;
                     if(nombreDocente in nombres){
                         materia['id_docente'] = nombres[materia.id_docente];
+                        console.log("Llamando a buscar docente por id y actulizarlo")
                         Docente.findByIdAndUpdate(
                             materia.id_docente
                         ,{
                             $inc: {materias_asignadas: 1}
                         }, function(err, num) {
-                            console.log("Busque a docente ", num, " y recibi respuesta");
+                            //console.log("Busque a docente ", num, " y recibi respuesta");
                         });
                     }else{
-
                         let nomDoc = materia.nombre_docente.split(' ');
                         let nom = "";
                         nomDoc.slice(2).forEach( a => {
                             nom = nom + " " + a;
                         })
                         
-                        await aniadirDocente({
+                        docentesToAdd.push({
                             nombre: nom,
                             apellido_paterno: nomDoc[0],
                             apellido_materno: nomDoc[1],
@@ -114,64 +157,28 @@ const controller = {
                             horas_cubiertas: 0,
                             evaluacion_pares: false,
                             id_jefe_carrera: materia.id_jefe_carrera
-                        })
-                        
-                        Docente.findOne({
-                                nombre: nom,
-                                apellido_paterno: nomDoc[0],
-                                apellido_materno: nomDoc[1]
-                            }).exec((res, docente) => {
-                                nombres[materia.id_docente]=docente.id
-                                materia['id_docente']=docente.id
-                                console.log("Busque a docente ", docente, " y lo encontre");
-                            })
+                        });
+                        IdsDocentesMaterias[index] = materia.codigo;
+                        nombres[materia.id_docente]="Existe" //No tengo la más mínima idea de cómo solucionar esto
                         errors.push(`${materia.nombre_docente}`);
                     }
                     materiasExcel[materia.codigo] = materia;
                 }
             });
 
-            MateriaController.find({codigo: { $in: Object.keys(materiasExcel) }},{_id:0}).exec(response(req, res, (req, res, materias) => {
-                console.log("Busque materias y tengo respuesta")
-                let materiasBD = {};
-                materias.forEach(materia => {
-                    if(materia.nombre != 'No valido'){
-                        materiasBD[materia.codigo] = materia
-                    }
-                }
-                );
-
-                let materiasToInsert = [];
-
-                Object.values(materiasExcel).forEach(materia => {
-                    //let dataToAssing = (materia.codigo in materiasBD)? JSON.stringify(materiasBD[materia.codigo]) : {};
-                    let datos = ['silabo_subido', 'aula_revisada', 'examen_revisado', 'contrato_impreso', 'contrato_firmado',
-                        'planilla_lista', 'planilla_firmada', 'cheque_solicitado', 'cheque_recibido', 'cheque_entregado', 'horas_planta'];
-                    if (materia.codigo in materiasBD) {
-                        datos.forEach(dato => {
-                            materia[dato] = materiasBD[materia.codigo][dato]
-                        });
-                    }
-                    materiasToInsert.push(materia);
-                });
-
-                let semestre = utils.getSemestre();
-                MateriaController.deleteMany({
-                    $and: [
-                        { inicio: { $gte: semestre.start} },
-                        { fin: {$lte: semestre.end}},
-                        { excel: true}
-                    ]
-                }, response(req, res, (req, res, eliminadas) => {
-                    console.log("Busque materias para eliminar y tengo respuesta")
-                    MateriaController.create(materiasToInsert, response(req, res, (req, res, materiasCreadas) => {
-                        console.log("Busque a materias paa crear y tengo respuesta")
-                        return res.status(200).send({Docentes_aniadidos: errors})
-                    }))
-                }));
-
-
-            }));
+            //Aquí estaba lo que está dentro de la funcion aniadirMaterias(matExc, err, req, res), porsia
+            if(docentes.length > 0){
+                console.log("Llamando a crear docente")
+                Docente.create(docentesToAdd, function(err, doc){
+                    doc.forEach(element => {
+                        doc.id//materiasExcel[]
+                    });
+                    aniadirMaterias(materiasExcel, errors, req, res)
+                })
+            } else {
+                aniadirMaterias(materiasExcel, errors, req, res)
+            }
+            
         }));
     },
 
