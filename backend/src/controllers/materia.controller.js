@@ -141,38 +141,45 @@ const controller = {
                             //console.log("Busque a docente ", num, " y recibi respuesta");
                         });
                     }else{
-                        let nomDoc = materia.nombre_docente.split(' ');
-                        let nom = "";
-                        nomDoc.slice(2).forEach( a => {
-                            nom = nom + " " + a;
-                        })
-                        
-                        docentesToAdd.push({
-                            nombre: nom,
-                            apellido_paterno: nomDoc[0],
-                            apellido_materno: nomDoc[1],
-                            email: materia.email_doc,
-                            materias_asignadas: 1,
-                            horas_planta: 0,
-                            horas_cubiertas: 0,
-                            evaluacion_pares: false,
-                            id_jefe_carrera: materia.id_jefe_carrera
-                        });
-                        IdsDocentesMaterias[index] = materia.codigo;
-                        nombres[materia.id_docente]="Existe" //No tengo la más mínima idea de cómo solucionar esto
-                        errors.push(`${materia.nombre_docente}`);
+                        //if(materia.nombre_docente in IdsDocentesMaterias){
+                            let nomDoc = materia.nombre_docente.split(' ');
+                            let nom = "";
+                            nomDoc.slice(2).forEach( a => {
+                                nom = nom + " " + a;
+                            })
+                            
+                            docentesToAdd[materia.codigo] = {
+                                nombre: nom,
+                                apellido_paterno: nomDoc[0],
+                                apellido_materno: nomDoc[1],
+                                email: materia.email_doc,
+                                materias_asignadas: 1,
+                                horas_planta: 0,
+                                horas_cubiertas: 0,
+                                evaluacion_pares: false,
+                                id_jefe_carrera: materia.id_jefe_carrera
+                            };
+                            IdsDocentesMaterias[materia.nombre_docente] = 'existe'
+                            errors.push(`${materia.nombre_docente}`);
+                        //}
+                        materia['id_docente'] = '';
+                         //No tengo la más mínima idea de cómo solucionar esto
                     }
                     materiasExcel[materia.codigo] = materia;
                 }
             });
 
             //Aquí estaba lo que está dentro de la funcion aniadirMaterias(matExc, err, req, res), porsia
-            if(docentes.length > 0){
+            if(docentesToAdd.length > 0){
                 console.log("Llamando a crear docente")
                 Docente.create(docentesToAdd, function(err, doc){
-                    doc.forEach(element => {
-                        doc.id//materiasExcel[]
-                    });
+                    
+                    for(var a in doc){
+                        docentesToAdd.forEach((doc1, ind) =>{
+                            materiasExcel[ind].id_docente = doc[a].id
+                        })
+                    }
+                    
                     aniadirMaterias(materiasExcel, errors, req, res)
                 })
             } else {
