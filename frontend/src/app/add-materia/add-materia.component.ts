@@ -231,18 +231,18 @@ export class AddMateriaComponent implements OnInit {
       this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
       this.materiaService.postMateriasExcel(this.data).subscribe(
         res=>{
-          console.log(res);
+          
           this.dialogRef.close();
           if(res.status==200) {
             let msj = '';
-            if(Object.values(res.body)[0] < 0){
-              msj= '\nSe han añadido los siguientes docentes: \n'
-              Object.values(res.body)[0].forEach(e => {
-                msj += ("   -" + e + "\n")                  
+
+            if(res.body['Docentes_aniadidos'].length > 0){
+              msj= '<p> Se han añadido los siguientes docentes: </p>'
+              res.body['Docentes_aniadidos'].forEach(e => {
+                msj += ("<p>   -    " + e + "</p>")                  
               });          
             }
-            this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:`Materia(s) añadida(s) exitosamente. ${msj})
-          }`}});
+            this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:`<p>Materia(s) añadida(s) exitosamente.</p> ${msj}`}});
           }
         },error => {
           console.log(error)

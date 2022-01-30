@@ -17,6 +17,7 @@ import {Usuario} from "../models/usuario";
 import {AddUsuarioComponent} from "../add-usuario/add-usuario.component";
 import {EditUsuarioComponent} from "../edit-usuario/edit-usuario.component";
 import {DeleteComponent} from "../delete/delete.component";
+import {AlertComponent} from "../alert/alert.component";
 
 export class Configuracion {
   constructor(){
@@ -398,23 +399,31 @@ export class JefeDeCarreraComponent implements OnInit {
   setCheckbox(idMateria,body,materia?) {
     let idDocente = this.dataSourceMaterias3.filteredData.filter(a=>a._id==idMateria).map(a=>a.id_docente);
     let docente = this.dataSourceDocentes.filteredData.filter(a=>a._id==idDocente[0]);
-    if(body.contrato_impreso){
-      this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"firmar_contrato",element:null}});
-    }else if(body.planilla_lista){
-      this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"firmar_planilla",element:null}});
-    }else if(body.cheque_recibido){
-      this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"recoger_cheque",element:null}});
-    }
-    if(this.tokenService.getUsuarioDocFollow().rol!="decano"){
-      this.materiaService.putMateria(idMateria,body).subscribe(
-        res=>{
-          console.log(res);
-          this.getMaterias();
-        },
-        error => {
-          console.log(error);
-        }
-      )
+    console.log('docente', docente)
+    if(docente.length > 0){
+      if(body.contrato_impreso){
+        this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"firmar_contrato",element:null}});
+      }else if(body.planilla_lista){
+        this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"firmar_planilla",element:null}});
+      }else if(body.cheque_recibido){
+        this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"recoger_cheque",element:null}});
+      }
+      if(this.tokenService.getUsuarioDocFollow().rol!="decano"){
+        this.materiaService.putMateria(idMateria,body).subscribe(
+          res=>{
+            console.log(res);
+            this.getMaterias();
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      }
+    }else{
+
+      this.getMaterias();
+      this.dialogMaterias.open(AlertComponent, {width:'300px',data:{action:"Error",message:`No se asignó a un docente a esta materia. Por favor, comunique al Jefe de Carrera correspondiente.`}});
+          
     }
 
   }

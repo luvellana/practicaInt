@@ -120,8 +120,8 @@ const controller = {
         Docente.find({}).exec(response(req, res, async (req, res, docentes) => {
             let nombres = {};
             docentes.forEach(docente => {
-                let nombre = docente.apellido_paterno + docente.apellido_materno  + docente.nombre;
-                if(docente.segundo_nombre) nombre += docente.segundo_nombre;
+                let nombre = docente.apellido_paterno.replace(/\s/g,'') + docente.apellido_materno.replace(/\s/g,'')  + docente.nombre.replace(/\s/g,'');
+                if(docente.segundo_nombre) nombre += docente.segundo_nombre.replace(/\s/g,'');
                 nombres[nombre] = docente.id;
             });
             let materiasExcel = {};
@@ -147,6 +147,12 @@ const controller = {
                     }else{
                         if(materia.nombre_docente in IdsDocentes){
                             materiasDocentes[materia.codigo]=materia.nombre_docente.replace(/\s/g,'')
+                            docentesToAdd.forEach(d => {
+                                let nom = d.apellido_paterno.replace(/\s/g,'') + d.apellido_materno.replace(/\s/g,'')  + d.nombre.replace(/\s/g,'');
+                                if (nom === materia.nombre_docente.replace(/\s/g,'')){
+                                    d.materias_asignadas = d.materias_asignadas + 1
+                                }
+                            } )
                         }else{
                             let nomDoc = materia.nombre_docente.split(' ');
                             let nom = "";
@@ -186,7 +192,7 @@ const controller = {
                 let doc = await aniadirDocente(docentesToAdd)
                     
                 for(var a in doc){
-                    let nombre = doc[a].apellido_paterno + doc[a].apellido_materno  + doc[a].nombre;
+                    let nombre = doc[a].apellido_paterno.replace(/\s/g,'') + doc[a].apellido_materno.replace(/\s/g,'')  + doc[a].nombre.replace(/\s/g,'');
                     for(var b in materiasDocentes){
                         if(materiasDocentes[b]===nombre){
                             materiasExcel[b].id_docente = doc[a].id
