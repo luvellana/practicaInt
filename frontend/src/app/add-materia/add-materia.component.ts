@@ -149,7 +149,7 @@ export class AddMateriaComponent implements OnInit {
           this.form.value.id_docente = "";
         }
         this.form.value.id_jefe_carrera=this.super.usuario.nombre_corto;
-        console.log(this.form.value);
+        //console.log(this.form.value);
         this.materiaService.postMateria(this.form.value).subscribe(
           res => {
             this.dialogRef.close();
@@ -231,7 +231,7 @@ export class AddMateriaComponent implements OnInit {
       this.data = <AOA>(XLSX.utils.sheet_to_json(ws, {header: 1}));
       this.materiaService.postMateriasExcel(this.data).subscribe(
         res=>{
-          
+
           this.dialogRef.close();
           if(res.status==200) {
             let msj = '';
@@ -248,7 +248,7 @@ export class AddMateriaComponent implements OnInit {
           console.log(error)
         }
       );
-      console.log(this.data);
+      //console.log(this.data);
     };
     reader.readAsBinaryString(this.target.files[0]);
   }

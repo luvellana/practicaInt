@@ -579,7 +579,7 @@ export class JefeDeCarreraComponent implements OnInit {
     }else if(def.toString()=="ver_horas_no_asignadas"){
       body = {"ver_horas_no_asignadas": negation}
     }
-    console.log(body);
+    //console.log(body);
     this.materiaService.putUsuarios(body, this.tokenService.userDocFollow._id).subscribe(
       res => {
         console.log(res);

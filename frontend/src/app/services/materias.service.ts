@@ -185,7 +185,7 @@ export class MateriasService {
   }
 
   resetSemestre() {
-    console.log(this.tokenService.getToken());
+    //console.log(this.tokenService.getToken());
     let headers = new HttpHeaders().set('Content-Type', "application/json")
       .set('Token', this.tokenService.getToken());
     return this.http.post(this.URL_API+"/reset/semestre",{headers: headers});

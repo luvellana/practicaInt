@@ -133,7 +133,7 @@ export class EditMateriaComponent implements OnInit {
           this.dialogRef.close();
           if(res.status==200) {
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Modificación",message:"Materia modificada exitosamente"}});
-            console.log(this.form.value);
+            //console.log(this.form.value);
           }
         }, error => {
           console.log(error);

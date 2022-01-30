@@ -28,7 +28,7 @@ export class GoogleLogInComponent implements OnInit {
     async signIn() {
         await this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
         this.authService.authState.subscribe(user => {
-            console.log('user', user);
+            //console.log('user', user);
             this.materiasService.getUsuarioByEmail(user.email).subscribe(
                 res => {
                     this.tokenService.setUserDocFollow(res);

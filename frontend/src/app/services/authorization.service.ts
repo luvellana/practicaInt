@@ -31,7 +31,7 @@ export class AuthorizationService {
   }
 
   async signOut() {
-    console.log('service log out');
+    //console.log('service log out');
     await this.authService.signOut();
     this.tokenService.reset();
   }
