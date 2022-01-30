@@ -21,7 +21,10 @@ function actualizarHoras(req, res, docenteId, materia, sumar, callback){
     }));
 }
 
-async function aniadirDocente(doc){
+async function aniadirDocente(docentes){
+
+    return Docente.create(docentes)
+    
     
 }
 
@@ -114,7 +117,7 @@ const controller = {
         });
 
         console.log("Llamando a buscar todos los docentes");
-        Docente.find({}).exec(response(req, res, (req, res, docentes) => {
+        Docente.find({}).exec(response(req, res, async (req, res, docentes) => {
             let nombres = {};
             docentes.forEach(docente => {
                 let nombre = docente.apellido_paterno + docente.apellido_materno  + docente.nombre;
@@ -124,7 +127,8 @@ const controller = {
             let materiasExcel = {};
             let errors = [];
             let docentesToAdd = [];
-            let IdsDocentesMaterias = [];
+            let IdsDocentes = [];
+            let materiasDocentes = {};
             let i = 0;
             materias.forEach(async (materia, index) => {
                 if(materia.nombre != 'No valido'){
@@ -141,15 +145,17 @@ const controller = {
                             //console.log("Busque a docente ", num, " y recibi respuesta");
                         });
                     }else{
-                        //if(materia.nombre_docente in IdsDocentesMaterias){
+                        if(materia.nombre_docente in IdsDocentes){
+                            materiasDocentes[materia.codigo]=materia.nombre_docente.replace(/\s/g,'')
+                        }else{
                             let nomDoc = materia.nombre_docente.split(' ');
                             let nom = "";
                             nomDoc.slice(2).forEach( a => {
                                 nom = nom + " " + a;
                             })
                             
-                            docentesToAdd[materia.codigo] = {
-                                nombre: nom,
+                            docentesToAdd.push({
+                                nombre: nom.trim().replace(/\s/g,''),
                                 apellido_paterno: nomDoc[0],
                                 apellido_materno: nomDoc[1],
                                 email: materia.email_doc,
@@ -158,10 +164,15 @@ const controller = {
                                 horas_cubiertas: 0,
                                 evaluacion_pares: false,
                                 id_jefe_carrera: materia.id_jefe_carrera
-                            };
-                            IdsDocentesMaterias[materia.nombre_docente] = 'existe'
+                            });
+                            
+                            
+                            materiasDocentes[materia.codigo]=materia.nombre_docente.replace(/\s/g,'')
+
+                            IdsDocentes[materia.nombre_docente] = 'existe'
                             errors.push(`${materia.nombre_docente}`);
-                        //}
+                        }
+
                         materia['id_docente'] = '';
                          //No tengo la más mínima idea de cómo solucionar esto
                     }
@@ -172,16 +183,19 @@ const controller = {
             //Aquí estaba lo que está dentro de la funcion aniadirMaterias(matExc, err, req, res), porsia
             if(docentesToAdd.length > 0){
                 console.log("Llamando a crear docente")
-                Docente.create(docentesToAdd, function(err, doc){
+                let doc = await aniadirDocente(docentesToAdd)
                     
-                    for(var a in doc){
-                        docentesToAdd.forEach((doc1, ind) =>{
-                            materiasExcel[ind].id_docente = doc[a].id
-                        })
+                for(var a in doc){
+                    let nombre = doc[a].apellido_paterno + doc[a].apellido_materno  + doc[a].nombre;
+                    for(var b in materiasDocentes){
+                        if(materiasDocentes[b]===nombre){
+                            materiasExcel[b].id_docente = doc[a].id
+                        }
                     }
+                }
                     
-                    aniadirMaterias(materiasExcel, errors, req, res)
-                })
+                aniadirMaterias(materiasExcel, errors, req, res)
+                
             } else {
                 aniadirMaterias(materiasExcel, errors, req, res)
             }
