@@ -28,12 +28,12 @@ function response(req, res, func) {
             }
         }
         if(!result) {
-            console.log("Entré aquí porque mi result es vacío")
+            //console.log("Entré aquí porque mi result es vacío")
             return res.status(404).send({
             message: 'No se ha encontrado los datos en la base de datos'
         });
         } 
-        console.log("La logró")
+        //console.log("La logró")
         return func(req, res, result);
     }
 }
@@ -49,8 +49,8 @@ function getSemestre(){
 }
 
 async function sendMail(destino, materia, inicio, fin, correo_id, idjc, docente, callback){
-    console.log(correo_id);
-    console.log(correo_id in correos);
+    //console.log(correo_id);
+    //console.log(correo_id in correos);
     let correo = correos[correo_id];
 
     if(correo.asunto === 'Pago realizado'){

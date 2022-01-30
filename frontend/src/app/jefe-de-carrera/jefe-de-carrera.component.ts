@@ -399,7 +399,7 @@ export class JefeDeCarreraComponent implements OnInit {
   setCheckbox(idMateria,body,materia?) {
     let idDocente = this.dataSourceMaterias3.filteredData.filter(a=>a._id==idMateria).map(a=>a.id_docente);
     let docente = this.dataSourceDocentes.filteredData.filter(a=>a._id==idDocente[0]);
-    console.log('docente', docente)
+    //console.log('docente', docente)
     if(docente.length > 0){
       if(body.contrato_impreso){
         this.dialogMaterias.open(DeleteComponent, {width:'300px',data:{materia:materia,docente:docente,asunto:"firmar_contrato",element:null}});

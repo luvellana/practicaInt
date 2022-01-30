@@ -29,9 +29,9 @@ async function aniadirDocente(docentes){
 }
 
 function aniadirMaterias(materiasExcel, errors, req, res){
-    console.log("Llamando a buscar todas las materias")
+    //console.log("Llamando a buscar todas las materias")
     MateriaController.find({codigo: { $in: Object.keys(materiasExcel) }},{_id:0}).exec(response(req, res, (req, res, materias) => {
-        console.log("Busque materias y tengo respuesta")
+        //console.log("Busque materias y tengo respuesta")
         let materiasBD = {};
         materias.forEach(materia => {
             if(materia.nombre != 'No valido'){
@@ -52,7 +52,7 @@ function aniadirMaterias(materiasExcel, errors, req, res){
             materiasToInsert.push(materia);
         })
         let semestre = utils.getSemestre();
-        console.log("Llamando a borrar materias")
+        //console.log("Llamando a borrar materias")
         MateriaController.deleteMany({
             $and: [
                 { inicio: { $gte: semestre.start} },
@@ -60,7 +60,7 @@ function aniadirMaterias(materiasExcel, errors, req, res){
                 { excel: true}
             ]
         }, response(req, res, (req, res, eliminadas) => {
-            console.log("Llamando a añadir materias")
+            //console.log("Llamando a añadir materias")
             MateriaController.create(materiasToInsert, response(req, res, (req, res, materiasCreadas) => {
                 return res.status(200).send({Docentes_aniadidos: errors})
             }))
@@ -116,7 +116,7 @@ const controller = {
             }
         });
 
-        console.log("Llamando a buscar todos los docentes");
+        //console.log("Llamando a buscar todos los docentes");
         Docente.find({}).exec(response(req, res, async (req, res, docentes) => {
             let nombres = {};
             docentes.forEach(docente => {
@@ -136,7 +136,7 @@ const controller = {
                     let nombreDocente = materia.id_docente;
                     if(nombreDocente in nombres){
                         materia['id_docente'] = nombres[materia.id_docente];
-                        console.log("Llamando a buscar docente por id y actulizarlo")
+                        //console.log("Llamando a buscar docente por id y actulizarlo")
                         Docente.findByIdAndUpdate(
                             materia.id_docente
                         ,{
@@ -188,7 +188,7 @@ const controller = {
 
             //Aquí estaba lo que está dentro de la funcion aniadirMaterias(matExc, err, req, res), porsia
             if(docentesToAdd.length > 0){
-                console.log("Llamando a crear docente")
+                //console.log("Llamando a crear docente")
                 let doc = await aniadirDocente(docentesToAdd)
                     
                 for(var a in doc){
