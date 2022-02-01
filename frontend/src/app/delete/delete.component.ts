@@ -28,7 +28,7 @@ export class DeleteComponent  implements OnInit{
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Eliminar",message:"Materia eliminada exitosamente"}});
           }
         },error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al eliminar materia"}});
         }
       )
@@ -40,7 +40,7 @@ export class DeleteComponent  implements OnInit{
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Eliminar",message:"Docente eliminado exitosamente"}});
           }
         },error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al eliminar docente"}});
         }
       )
@@ -52,7 +52,7 @@ export class DeleteComponent  implements OnInit{
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Eliminar",message:"Usuario eliminado exitosamente"}});
           }
         },error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al eliminar usuario"}});
         }
       )
@@ -73,13 +73,13 @@ export class DeleteComponent  implements OnInit{
       "nombre_completo_docente": this.data.docente[0].nombre + ' ' + this.data.docente[0].apellido_paterno + ' ' + this.data.docente[0].apellido_materno, 
       "asunto": this.data.asunto
     };
-    console.log(body);
+    //console.log(body);
     this.materiaService.sendMail(body).subscribe(
       res=>{
         this.dialogRef.close();
         this.dialog.open(AlertComponent, {width:'300px',data:{action:"Éxito",message:"Email enviado"}});
       },error=>{
-        console.log(error);
+        //console.log(error);
         this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"No se pudo enviar el email"}});
     }
     )

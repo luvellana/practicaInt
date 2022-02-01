@@ -161,7 +161,7 @@ const controller = {
                             })
                             
                             docentesToAdd.push({
-                                nombre: nom.trim().replace(/\s/g,''),
+                                nombre: nom.trim(),
                                 apellido_paterno: nomDoc[0],
                                 apellido_materno: nomDoc[1],
                                 email: materia.email_doc,

@@ -1,1 +1,4 @@
 node_modules
+backend.crt
+backend.key
+src/dist

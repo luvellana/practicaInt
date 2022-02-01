@@ -51,7 +51,7 @@ export class EditUsuarioComponent {
             });
           }
         }, error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {
             width: '300px',
             data: {action: "Error", message: "Error al modificar usuario"}

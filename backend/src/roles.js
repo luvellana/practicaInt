@@ -5,7 +5,7 @@ let roles = {
       type: "start",
       days: -10,
       horas_contrato: false,
-      message: "El silabo no ha sido revisado"
+      message: "El sílabo no ha sido revisado"
     },
     {
       nombre: "aula_revisada",
@@ -19,7 +19,7 @@ let roles = {
       type: "start",
       days: -10,
       horas_contrato: false,
-      message: "Los examenes no han sido revisados"
+      message: "Los exámenes no han sido revisados"
     }
   ],
   asistente: [
@@ -61,7 +61,7 @@ let roles = {
       type: "end",
       days: 0,
       horas_contrato: false,
-      message: "La planilla no esta lista"
+      message: "La planilla no está lista"
     },
     {
       nombre: "planilla_firmada",

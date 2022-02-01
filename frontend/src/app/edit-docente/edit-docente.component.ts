@@ -32,7 +32,7 @@ export class EditDocenteComponent implements OnInit {
       res => {
         this.dataSourceUsuarios = res;
       }, err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -49,9 +49,9 @@ export class EditDocenteComponent implements OnInit {
   });
 
   onSubmit(){
-    console.log(this.data.jefe);
+    //console.log(this.data.jefe);
     if((+this.form.value.horas_planta)<(+this.data.docente.horas_cubiertas)){
-      this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"El docente ya cubre con mas horas de planta que las inidicadas"}});
+      this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"El docente ya cubre con más horas de planta que las indicadas"}});
     }else if(!this.data.docente.id_jefe_carrera){
       this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"Asignar un jefe de carrera encargado"}});
     } else{
@@ -64,7 +64,7 @@ export class EditDocenteComponent implements OnInit {
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Modificación",message:"Docente modificado exitosamente"}});
           }
         },error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al modificar docente"}});
         }
       )

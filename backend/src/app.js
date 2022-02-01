@@ -19,6 +19,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use( express.static(__dirname + '/dist' ) ); 
+//app.use("./dist/index.html");
+app.get('/', (req, res) => {
+    res.sendFile("C:/Users/cesar/Documents/Gestión 2021/UPB/2DO SEMESTRE/PRACTICA INTERNA/Proyecto_Docentes/practicaInt/backend/src/dist/index.html");
+});
+
 app.use('/materias', materia_routes);
 app.use('/docentes', docente_routes);
 app.use('/usuarios', usuario_routes);

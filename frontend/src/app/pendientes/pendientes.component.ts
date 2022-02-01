@@ -35,8 +35,7 @@ export class PendientesComponent implements OnInit {
   displayedColumnsPendientes: string[]=['materia','id_docente','inicio','fin','message'];
 
   ngOnInit() {
-    this.getDocentes();
-    this.getPendientes();
+    this.refresh();
   }
 
 

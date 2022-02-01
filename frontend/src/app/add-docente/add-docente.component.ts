@@ -49,7 +49,7 @@ export class AddDocenteComponent implements OnInit {
       res => {
         this.dataSourceUsuarios = res;
       }, err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -84,7 +84,7 @@ export class AddDocenteComponent implements OnInit {
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:"Docente añadido exitosamente"}});
           }
         },error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al añadir docente"}});
         }
       );

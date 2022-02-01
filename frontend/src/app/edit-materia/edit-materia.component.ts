@@ -74,7 +74,7 @@ export class EditMateriaComponent implements OnInit {
       res => {
         this.dataSourceDocentes = res;
       }, err => {
-        console.log(err);
+        //onsole.log(err);
       }
     );
   }
@@ -88,7 +88,7 @@ export class EditMateriaComponent implements OnInit {
       res => {
         this.dataSourceUsuarios = res;
       }, err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -116,7 +116,7 @@ export class EditMateriaComponent implements OnInit {
     } else if (this.data.docente && !this.data.docente[0] && this.form.value.horas_planta != "") {
       this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"Seleccionar un docente"}});
     } else if ((+this.form.value.horas_totales) < (+this.form.value.horas_planta)) {
-      this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"Las horas de planta no deben superar las horas totales de la meteria"}});
+      this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"Las horas de planta no deben superar las horas totales de la materia"}});
     } else if (this.data.docente && (this.data.materia.horas_planta < this.form.value.horas_planta) && ((parseInt(this.data.docente[0].horas_planta) - parseInt(this.data.docente[0].horas_cubiertas)) < (parseInt(this.form.value.horas_planta) - parseInt(this.data.materia.horas_planta)))) {
       this.dialog.open(AlertComponent, {width:'300px',data:{action:"Conflicto",message:"Las horas de planta faltantes del docente son menores a las horas de planta indicadas"}});
     } else {
@@ -136,7 +136,7 @@ export class EditMateriaComponent implements OnInit {
             //console.log(this.form.value);
           }
         }, error => {
-          console.log(error);
+          //console.log(error);
           this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al modificar materia"}});
         }
       )

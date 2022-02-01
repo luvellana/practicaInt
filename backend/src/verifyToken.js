@@ -2,13 +2,13 @@ const Usuario = require('./models/usuario.model');
 const { OAuth2Client }  = require('google-auth-library');
 const response = require('./utils').response;
 
-const client = new OAuth2Client('602723697704-ucdbgn6m678gf5rkj02npjl2rrcak250.apps.googleusercontent.com');
+const client = new OAuth2Client('602723697704-rgovso8hk22drq6nrjaufgp1enhiqs93.apps.googleusercontent.com');
 var userInfo;
 
 async function verify(token) {
     const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: '602723697704-ucdbgn6m678gf5rkj02npjl2rrcak250.apps.googleusercontent.com',
+        audience: '602723697704-rgovso8hk22drq6nrjaufgp1enhiqs93.apps.googleusercontent.com',
     });
     userInfo = ticket.getPayload();
 }

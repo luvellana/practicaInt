@@ -71,7 +71,7 @@ const controller = {
                                 id_docente: docente._id,
                                 inicio: '',
                                 fin: '',
-                                message: `No se ha realizado la evaluacion por pares`
+                                message: `No se ha realizado la evaluación por pares`
                             });
                         }
                     });
@@ -88,7 +88,7 @@ const controller = {
             return res.status(200).send(info);
         }).catch(err => {
             console.log(err);
-            return res.status(500).send({message: 'Ocurrio un error al enviar el email'});
+            return res.status(500).send({message: 'Ocurrió un error al enviar el email'});
         });
     }
 };

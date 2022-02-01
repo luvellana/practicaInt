@@ -71,7 +71,7 @@ export class AddUsuarioComponent implements OnInit {
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:"Usuario añadido exitosamente"}});
           }
         }, error => {
-          console.log(error);
+          //console.log(error);
         }
       );
     }

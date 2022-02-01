@@ -2,11 +2,11 @@
 <h1 *ngIf="data.docente" mat-dialog-title>Enviar mail</h1>
 <div mat-dialog-content>
   <p *ngIf="data.element">¿Seguro que desea eliminar {{data.def}}?</p>
-  <p *ngIf="data.docente">Desea enviar a docente: {{data.docente[0].nombre}} {{data.docente[0].apellido_paterno}} {{data.docente[0].apellido_materno}}?</p>
+  <p *ngIf="data.docente">¿Desea enviar a docente: {{data.docente[0].nombre}} {{data.docente[0].apellido_paterno}} {{data.docente[0].apellido_materno}}?</p>
   <p *ngIf="data.docente">con correo: {{data.docente[0].email}}</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button *ngIf="data.element" (click)="confirmDeletion()">Si</button>
+  <button mat-button *ngIf="data.element" (click)="confirmDeletion()">Sí</button>
   <button mat-raised-button *ngIf="data.docente" (click)="enviarMail()">Enviar</button>
   <button mat-button (click)="cancelDeletion()">Cancelar</button>
 </div>

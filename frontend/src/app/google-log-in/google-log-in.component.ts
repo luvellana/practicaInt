@@ -38,7 +38,7 @@ export class GoogleLogInComponent implements OnInit {
                     this.route.navigate(['seguimiento']);
                 },
                 error => {
-                    console.log(error);
+                    //console.log(error);
                     this.dialog.open(AlertComponent, {
                         width: '300px',
                         data: { action: 'Conflicto', message: 'Cuenta no registrada' }

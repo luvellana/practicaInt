@@ -267,6 +267,8 @@ export class JefeDeCarreraComponent implements OnInit {
     this.materiaService.getDocentesAnyWay().subscribe(
       res=>{
         this.dataSourceDocentes2 = new MatTableDataSource(res);
+        this.getMaterias();
+        this.getMaterias2();
       },err=>{
         //console.log(err);
       }
@@ -299,18 +301,14 @@ export class JefeDeCarreraComponent implements OnInit {
   openAddMaterias() {
     let dialogRef = this.dialogMaterias.open(AddMateriaComponent, {width:'750px', height:'600px'});
     dialogRef.afterClosed().subscribe(() => {
-      this.getDocentes();
-      this.getMaterias();
-      this.getMaterias2();
+      this.refresh();
     });
   }
 
   openAddDocentes() {
     let dialogRef = this.dialogMaterias.open(AddDocenteComponent, {width:'750px'});
     dialogRef.afterClosed().subscribe(() => {
-      this.getDocentes();
-      this.getMaterias();
-      this.getMaterias2();
+      this.refresh();
     });
   }
 
@@ -410,12 +408,11 @@ export class JefeDeCarreraComponent implements OnInit {
       }
       if(this.tokenService.getUsuarioDocFollow().rol!="decano"){
         this.materiaService.putMateria(idMateria,body).subscribe(
-          res=>{
-            console.log(res);
+          res=>{;
             this.getMaterias();
           },
           error => {
-            console.log(error);
+            //console.log(error);
           }
         )
       }
@@ -432,10 +429,10 @@ export class JefeDeCarreraComponent implements OnInit {
     if(this.tokenService.getUsuarioDocFollow().rol=="jefe_carrera"){
       this.materiaService.putDocente(idDocente,body).subscribe(
         res=>{
-          console.log(res);
+          //console.log(res);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
     }
@@ -511,8 +508,7 @@ export class JefeDeCarreraComponent implements OnInit {
   refresh() {
     this.getUsuarios();
     this.getDocentes();
-    this.getMaterias();
-    this.getMaterias2();
+    this.getDocentes2();
   }
 
   displayRol(rol) {
@@ -535,7 +531,7 @@ export class JefeDeCarreraComponent implements OnInit {
         this.tokenService.setUserDocFollow(res);
         this.setPreferences();
       },error=>{
-        console.log(error)
+        //console.log(error)
       }
     );
   }
@@ -547,10 +543,10 @@ export class JefeDeCarreraComponent implements OnInit {
     //console.log(body);
     this.materiaService.putUsuarios({"preferencias_seguimiento": body}, this.tokenService.userDocFollow._id).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
         this.updatePreferences();
       },error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -561,10 +557,10 @@ export class JefeDeCarreraComponent implements OnInit {
     //console.log(body);
     this.materiaService.putUsuarios({"preferencias": body}, this.tokenService.userDocFollow._id).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
         this.updatePreferences();
       },error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -582,10 +578,10 @@ export class JefeDeCarreraComponent implements OnInit {
     //console.log(body);
     this.materiaService.putUsuarios(body, this.tokenService.userDocFollow._id).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
         this.updatePreferences();
       },error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -594,11 +590,11 @@ export class JefeDeCarreraComponent implements OnInit {
     if(this.tokenService.getUsuarioDocFollow().rol=="registros"){
       this.materiaService.putMateria(idMateria,body).subscribe(
         res=>{
-          console.log(res);
+          //console.log(res);
           this.getMaterias();
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       )
     }
@@ -615,9 +611,9 @@ export class JefeDeCarreraComponent implements OnInit {
   resetAnio() {
     this.materiaService.resetAnio().subscribe(
       res=>{
-        console.log(res);
+        //console.log(res);
       },error =>{
-        console.log(error);
+        //console.log(error);
       }
     )
   }
@@ -625,9 +621,9 @@ export class JefeDeCarreraComponent implements OnInit {
   resetSemestre() {
     this.materiaService.resetSemestre().subscribe(
       res=>{
-        console.log(res);
+        //console.log(res);
       },error=>{
-        console.log(error);
+        //console.log(error);
       }
     )
   }

@@ -90,7 +90,7 @@ export class AddMateriaComponent implements OnInit {
       res => {
         this.dataSourceDocentes = res;
       }, err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -99,7 +99,7 @@ export class AddMateriaComponent implements OnInit {
       res => {
         this.dataSourceUsuarios = res;
       }, err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -157,7 +157,7 @@ export class AddMateriaComponent implements OnInit {
               this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:"Materia añadida exitosamente"}});
             }
           }, error => {
-            console.log(error);
+            //console.log(error);
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Error",message:"Error al añadir materia"}});
           }
         );
@@ -245,7 +245,7 @@ export class AddMateriaComponent implements OnInit {
             this.dialog.open(AlertComponent, {width:'300px',data:{action:"Adición",message:`<p>Materia(s) añadida(s) exitosamente.</p> ${msj}`}});
           }
         },error => {
-          console.log(error)
+          //console.log(error)
         }
       );
       //console.log(this.data);
